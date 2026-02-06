@@ -81,8 +81,23 @@ export async function POST(request) {
       ],
     });
 
-    const text = message.content[0].text;
-    const data = JSON.parse(text);
+    let text = message.content[0].text;
+
+    // Strip markdown code fences if the model wrapped them
+    text = text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+
+    // Find the JSON object in case there's leading/trailing text
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start === -1 || end === -1) {
+      console.error('No JSON object found in response:', text.slice(0, 200));
+      return Response.json(
+        { error: 'The response could not be parsed. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    const data = JSON.parse(text.slice(start, end + 1));
 
     return Response.json(data);
   } catch (err) {
