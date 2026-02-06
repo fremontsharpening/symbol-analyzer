@@ -106,7 +106,7 @@ export default function Home() {
             <div className="text-center py-12">
               <p className="text-red-400/80 text-lg">{error}</p>
               <p className="text-parchment-dim text-sm mt-3">
-                Make sure your ANTHROPIC_API_KEY is set in .env.local
+                Make sure your GEMINI_API_KEY is set in .env.local
               </p>
             </div>
           )}
